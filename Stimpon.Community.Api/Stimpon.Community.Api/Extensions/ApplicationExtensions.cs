@@ -87,19 +87,23 @@ public static class ApplicationExtensions
 
         #region CORS
 
-        // Setup the stupid CORS crap
-        builder.Services.AddCors(options =>
+        // Check if CORS is enabled
+        if (bool.Parse(builder.Configuration.GetConnectionString("UseCORS") ?? "false"))
         {
-            options.AddPolicy("Allow", policy =>
+            // Setup the stupid CORS crap
+            builder.Services.AddCors(options =>
             {
-                policy.WithOrigins(
-                    builder.Configuration.GetSection("CORSOrigins").Get<string[]>()!
-                )
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials();
+                options.AddPolicy("Allow", policy =>
+                {
+                    policy.WithOrigins(
+                        builder.Configuration.GetSection("CORSOrigins").Get<string[]>()!
+                    )
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
             });
-        });
+        }
 
         #endregion
 
@@ -137,8 +141,10 @@ public static class ApplicationExtensions
             app.UseHttpsRedirection();
         }
 
-        // Use CORS
-        app.UseCors("Allow");
+        if (bool.Parse(app.Configuration.GetConnectionString("UseCORS") ?? "false"))
+            // Enable CORS
+            app.UseCors("Allow");
+        
         // Use authorization
         app.UseAuthorization();
         // Map controllers
