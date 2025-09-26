@@ -1,0 +1,6 @@
+@Stimpon.Community.Api_HostAddress = http://localhost:5182
+
+GET {{Stimpon.Community.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
