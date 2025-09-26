@@ -47,7 +47,7 @@ public static class ApplicationExtensions
                 // We want to validate the lifetime of the token
                 ClockSkew = TimeSpan.Zero,
                 RequireExpirationTime = true,
-                ValidateLifetime = true,               
+                ValidateLifetime = true,
                 #endregion
                 #region Signing key
                 // We want to validate the token signature
@@ -67,7 +67,7 @@ public static class ApplicationExtensions
                 options.AddPolicy($"MINIMUM_ROLE_{role.Text()}", policy =>
                     policy.RequireAssertion(context =>
                     {
-                        
+
                         // Get the role from the token claims
                         if (Enum.TryParse<Roles>(context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value, out Roles userRole))
                             // Check if the role is at least the minimum role required
@@ -88,7 +88,7 @@ public static class ApplicationExtensions
         #region CORS
 
         // Check if CORS is enabled
-        if (bool.Parse(builder.Configuration.GetConnectionString("UseCORS") ?? "false"))
+        if (bool.Parse(builder.Configuration["UseCORS"] ?? "false"))
         {
             // Setup the stupid CORS crap
             builder.Services.AddCors(options =>
@@ -141,7 +141,7 @@ public static class ApplicationExtensions
             app.UseHttpsRedirection();
         }
 
-        if (bool.Parse(app.Configuration.GetConnectionString("UseCORS") ?? "false"))
+        if (bool.Parse(app.Configuration["UseCORS"] ?? "false"))
             // Enable CORS
             app.UseCors("Allow");
         
